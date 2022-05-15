@@ -1,6 +1,6 @@
 import picgo from 'picgo'
 import dayjs from 'dayjs'
-import CryptoJS from 'crypto-js'
+import crypto from 'crypto'
 
 
 function sleep(time) {
@@ -36,8 +36,14 @@ export = (ctx: picgo) => {
         }
         const prefix: string = ctx.getConfig('picgo-plugin-file-rename.prefix') || ''
         ctx.output.map(output => {
-          let fileHash = CryptoJS.MD5(output.buffer);
-          output.fileName = `${fileHash}${output.extname}`
+          let buf = output.buffer
+          if (!buf && output.base64Image) {
+            buf = Buffer.from(output.base64Image, 'base64')
+          }
+          const hash = crypto.createHash('md5');
+          hash.update(buf);
+          const fileMd5 = hash.digest('hex');
+          output.fileName = fileMd5 + output.extname
           if (prefix != '') {
             output.fileName = dayjs().format(prefix) + output.fileName
           }
