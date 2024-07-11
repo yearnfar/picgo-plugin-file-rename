@@ -1,4 +1,4 @@
-import picgo from 'picgo'
+import { PicGo } from 'picgo'
 import dayjs from 'dayjs'
 import crypto from 'crypto'
 
@@ -20,10 +20,10 @@ const pluginConfig = ctx => {
   ]
 }
 
-export = (ctx: picgo) => {
+export = (ctx: PicGo) => {
   const register = () => {
     ctx.helper.beforeUploadPlugins.register('file-rename', {
-      async handle(ctx: picgo) {
+      async handle(ctx: PicGo) {
         // console.log(ctx)
         const autoRename = ctx.getConfig('settings.autoRename')
         if (autoRename) {
